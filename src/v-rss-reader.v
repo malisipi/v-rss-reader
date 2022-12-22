@@ -21,10 +21,12 @@ fn main() {
 		height: window_height
 		title: window_title
 		mode: .resizable
+		on_init: app.on_init
 		children: [
 			ui.column(
 				spacing: 5
 				margin_: 5
+				stretch: true
 				children: [
 					ui.textbox(
 						id: 'textbox_url'
@@ -40,7 +42,8 @@ fn main() {
 					ui.listbox(
 						id: 'listbox_titles'
 						selection: 0
-						height: 400
+						height: 500
+						on_change: app.on_change
 					),
 				]
 			),
