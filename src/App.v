@@ -1,7 +1,6 @@
 module main
 
 import ui
-import ui.webview
 import vxml
 
 [heap]
@@ -20,17 +19,12 @@ fn (mut app App) on_init(_ &ui.Window) {
 fn (app &App) on_change(listbox &ui.ListBox) {
 	index := listbox.selected_item_at()
 	item := app.items[index]
-	title := item.title
-	url := item.url
 
-	webview.new_window(
-		url: url
-		title: title
-	)
+	ui.open_url(item.url)
 }
 
 fn (mut app App) on_add_url(_ &ui.Button) {
-	url_widget := app.window.textbox('textbox_url')
+	url_widget := app.window.get_widget_by_id_or_panic[ui.TextBox]('textbox_url')
 
 	// TODO: validate url before saving
 	app.add_url(url_widget.text)
@@ -77,7 +71,7 @@ fn (mut app App) fetch_sources() {
 }
 
 fn (app &App) update_listbox() {
-	mut list_widget := app.window.listbox('listbox_titles')
+	mut list_widget := app.window.get_widget_by_id_or_panic[ui.ListBox]('listbox_titles')
 
 	list_widget.clear()
 
