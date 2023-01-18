@@ -5,7 +5,7 @@ import gx
 
 const (
 	config_path   = './config.json'
-	window_width  = 800
+	window_width  = 1000
 	window_height = 600
 	window_title  = 'RSS Reader'
 )
@@ -40,23 +40,66 @@ fn main() {
 					ui.row(
 						widths: [
 							ui.stretch,
+							50.0,
 						]
 						children: [
 							ui.button(
-								text: 'Add and reload'
+								text: 'Add'
 								radius: 0
 								border_color: gx.gray
 								bg_color: gx.light_gray
 								on_click: app.on_add_url
 							),
+							ui.button(
+								text: 'Update'
+								radius: 0
+								border_color: gx.gray
+								bg_color: gx.light_gray
+								on_click: app.on_update
+							),
 						]
 					),
 					ui.row(
+						spacing: 5
+						widths: [
+							300.0,
+							ui.stretch,
+						]
 						children: [
-							ui.listbox(
-								id: 'listbox_titles'
-								selection: 0
-								on_change: app.on_change
+							ui.column(
+								heights: [
+									ui.stretch,
+								]
+								children: [
+									ui.listbox(
+										id: item_listbox_id
+										selection: 0
+										on_change: app.on_change
+									),
+								]
+							),
+							ui.column(
+								heights: [
+									20.0,
+									ui.stretch,
+								]
+								widths: [
+									ui.stretch,
+									ui.stretch,
+								]
+								margin_: 5.0
+								children: [
+									ui.button(
+										text: 'Open in browser'
+										radius: 0
+										border_color: gx.gray
+										bg_color: gx.light_gray
+										on_click: app.on_open_url
+									),
+									ui.label(
+										id: info_widget_id
+									),
+								]
 							),
 						]
 					),

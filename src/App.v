@@ -3,6 +3,11 @@ module main
 import ui
 import vxml
 
+const (
+	info_widget_id  = 'label_info'
+	item_listbox_id = 'listbox_titles'
+)
+
 [heap]
 struct App {
 mut:
@@ -16,11 +21,34 @@ fn (mut app App) on_init(_ &ui.Window) {
 	app.update_listbox()
 }
 
-fn (app &App) on_change(listbox &ui.ListBox) {
-	index := listbox.selected_item_at()
+fn (mut app App) on_update(_ &ui.Button) {
+	app.fetch_sources()
+	app.update_listbox()
+}
+
+fn (app &App) on_open_url(_ &ui.Button) {
+	listbox_widget := app.window.get_widget_by_id_or_panic[ui.ListBox](item_listbox_id)
+	index := listbox_widget.selected_item_at()
+
+	if index == -1 {
+		return
+	}
+
 	item := app.items[index]
 
 	ui.open_url(item.url)
+}
+
+fn (app &App) on_change(listbox &ui.ListBox) {
+	mut title_widget := app.window.get_widget_by_id_or_panic[ui.Label](info_widget_id)
+	index := listbox.selected_item_at()
+	item := app.items[index]
+
+	title := if item.title != '' { item.title } else { '...' }
+	description := if item.description != '' { item.description } else { '...' }
+	info := '\n\nTitle: ${title}\n\nDescription: ${description}'
+
+	title_widget.set_text(info)
 }
 
 fn (mut app App) on_add_url(_ &ui.Button) {
@@ -54,12 +82,14 @@ fn (mut app App) fetch_sources() {
 				item_els := result.get_elements_by_tag_name('item')
 
 				for item_el in item_els {
-					title_el := item_el.get_element_by_tag_name('title') or { continue }
-					link_el := item_el.get_element_by_tag_name('link') or { continue }
+					title := get_title_from_item(item_el) or { continue }
+					url := get_link_from_item(item_el) or { continue }
+					description := get_description_from_item(item_el)
 
 					app.items << RSSItem{
-						title: title_el.get_cdata().trim_space()
-						url: link_el.get_text()
+						title: title
+						url: url
+						description: description
 					}
 				}
 			}
