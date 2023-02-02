@@ -3,11 +3,6 @@ module main
 import ui
 import vxml
 
-const (
-	info_widget_id  = 'label_info'
-	item_listbox_id = 'listbox_titles'
-)
-
 [heap]
 struct App {
 mut:
@@ -27,7 +22,7 @@ fn (mut app App) on_update(_ &ui.Button) {
 }
 
 fn (app &App) on_open_url(_ &ui.Button) {
-	listbox_widget := app.window.get_widget_by_id_or_panic[ui.ListBox](item_listbox_id)
+	listbox_widget := app.window.get_or_panic[ui.ListBox](item_listbox_id)
 	index := listbox_widget.selected_item_at()
 
 	if index == -1 {
@@ -40,19 +35,19 @@ fn (app &App) on_open_url(_ &ui.Button) {
 }
 
 fn (app &App) on_change(listbox &ui.ListBox) {
-	mut title_widget := app.window.get_widget_by_id_or_panic[ui.Label](info_widget_id)
+	mut title_widget := app.window.get_or_panic[ui.TextBox](info_widget_id)
 	index := listbox.selected_item_at()
 	item := app.items[index]
 
 	title := if item.title != '' { item.title } else { '...' }
 	description := if item.description != '' { item.description } else { '...' }
-	info := '\n\nTitle: ${title}\n\nDescription: ${description}'
+	info := 'Title: ${title}\n\nDescription: ${description}'
 
 	title_widget.set_text(info)
 }
 
 fn (mut app App) on_add_url(_ &ui.Button) {
-	url_widget := app.window.get_widget_by_id_or_panic[ui.TextBox]('textbox_url')
+	url_widget := app.window.get_or_panic[ui.TextBox]('textbox_url')
 
 	// TODO: validate url before saving
 	app.add_url(url_widget.text)
@@ -89,7 +84,7 @@ fn (mut app App) fetch_sources() {
 					app.items << RSSItem{
 						title: title
 						url: url
-						description: description
+						description: convert_html_to_text(description)
 					}
 				}
 			}
@@ -101,7 +96,7 @@ fn (mut app App) fetch_sources() {
 }
 
 fn (app &App) update_listbox() {
-	mut list_widget := app.window.get_widget_by_id_or_panic[ui.ListBox]('listbox_titles')
+	mut list_widget := app.window.get_or_panic[ui.ListBox](item_listbox_id)
 
 	list_widget.clear()
 

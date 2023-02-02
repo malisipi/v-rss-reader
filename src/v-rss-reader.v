@@ -4,10 +4,12 @@ import ui
 import gx
 
 const (
-	config_path   = './config.json'
-	window_width  = 1000
-	window_height = 600
-	window_title  = 'RSS Reader'
+	config_path     = './config.json'
+	window_width    = 1000
+	window_height   = 600
+	window_title    = 'RSS Reader'
+	info_widget_id  = 'label_info'
+	item_listbox_id = 'listbox_titles'
 )
 
 fn main() {
@@ -96,8 +98,12 @@ fn main() {
 										bg_color: gx.light_gray
 										on_click: app.on_open_url
 									),
-									ui.label(
+									ui.textbox(
 										id: info_widget_id
+										height: 300
+										read_only: true
+										is_wordwrap: true
+										is_multiline: true
 									),
 								]
 							),
