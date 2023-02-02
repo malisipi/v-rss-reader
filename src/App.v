@@ -38,12 +38,9 @@ fn (app &App) on_change(listbox &ui.ListBox) {
 	mut title_widget := app.window.get_or_panic[ui.TextBox](info_widget_id)
 	index := listbox.selected_item_at()
 	item := app.items[index]
+	preview := item.preview()
 
-	title := if item.title != '' { item.title } else { '...' }
-	description := if item.description != '' { item.description } else { '...' }
-	info := 'Title: ${title}\n\nDescription: ${description}'
-
-	title_widget.set_text(info)
+	title_widget.set_text(preview)
 }
 
 fn (mut app App) on_add_url(_ &ui.Button) {
