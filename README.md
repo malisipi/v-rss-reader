@@ -5,6 +5,7 @@
 ## Install
 
 - `git clone https://github.com/walkingdevel/v-rss-reader.git`
+- `v install ui`
 - `v install https://github.com/walkingdevel/vxml`
 
 ## Roadmap
