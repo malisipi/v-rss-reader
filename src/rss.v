@@ -27,5 +27,5 @@ fn get_text_or_cdata(item &vxml.Node) string {
 		item.get_cdata()
 	}
 
-	return content.trim_space()
+	return decode_html_char_codes(content.trim_space())
 }
