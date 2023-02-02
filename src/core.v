@@ -26,7 +26,7 @@ fn (r &RSSItem) preview() string {
 	title := if r.title != '' { r.title } else { '...' }
 	description := if r.description != '' { r.description } else { '...' }
 
-	return 'Title: ${title}\n\nDescription: ${description}'
+	return '${title}\n\n${description}'
 }
 
 fn fetch_and_parse(url string) !vxml.Node {
